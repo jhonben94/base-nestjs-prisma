@@ -1,0 +1,46 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type domains {
+  id: ID!
+  domain_code: String!
+  domain_description: String!
+  domain_value: String!
+  domain_value_type: String!
+  module: String!
+  created_at: Timestamp!
+  modified_at: Timestamp
+  created_by: String!
+  modified_by: String
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type Query {
+  helloCustom: String
+  hello: String
+  alldomains: [domains!]
+  postById(id: Float!): domains
+  paginate(searchString: String, skip: Float, take: Float, orderBy: String, orderDir: String): [domains!]!
+}
+
+type Mutation {
+  delete(id: Float!): domains
+  createDraft(data: domainsCreateInput!): domains!
+}
+
+input domainsCreateInput {
+  domain_code: String!
+  domain_description: String!
+  domain_value: String!
+  domain_value_type: String!
+  module: String!
+  created_at: Timestamp
+  modified_at: Timestamp
+  created_by: String!
+  modified_by: String
+}

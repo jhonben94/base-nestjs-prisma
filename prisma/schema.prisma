@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestgraphql {
+    provider = "node node_modules/prisma-nestjs-graphql"
+    output = "../prisma/generated"
+    reExport = Directories
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_PG_URL")
+}
+
+model domains {
+  id                 Int       @id(map: "domains_pk") @default(autoincrement())
+  domain_code        String    @db.VarChar
+  domain_description String    @db.VarChar
+  domain_value       String    @db.VarChar
+  domain_value_type  String    @db.VarChar
+  module             String    @db.VarChar
+  created_at         DateTime  @default(now()) @db.Timestamp(6)
+  modified_at        DateTime? @db.Timestamp(6)
+  created_by         String    @db.VarChar
+  modified_by        String?   @db.VarChar
+}
+
+model password_trace {
+  passwordtraceid Int       @id(map: "password_trace_pk")
+  userid          Int
+  password        String    @db.VarChar
+  created_by      String    @db.VarChar
+  created_at      DateTime  @default(now()) @db.Timestamp(6)
+  modified_at     DateTime? @db.Timestamp(6)
+  modified_by     String?   @db.VarChar
+  users           users     @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction, map: "users_password_trace_fk")
+}
+
+model permisions {
+  permisionid      Int                @id(map: "permisions_pk")
+  code             String             @db.VarChar
+  created_by       String             @db.VarChar
+  created_at       DateTime           @default(now()) @db.Timestamp(6)
+  modified_at      DateTime?          @db.Timestamp(6)
+  modified_by      String?            @db.VarChar
+  description      String             @db.VarChar
+  roles_permisions roles_permisions[]
+}
+
+model roles {
+  rolid            Int                @id(map: "roles_pk")
+  code             String             @db.VarChar
+  created_by       String             @db.VarChar
+  created_at       DateTime           @default(now()) @db.Timestamp(6)
+  modified_at      DateTime?          @db.Timestamp(6)
+  modified_by      String?            @db.VarChar
+  description      String             @db.VarChar
+  roles_permisions roles_permisions[]
+  user_roles       user_roles[]
+}
+
+model roles_permisions {
+  rolid       Int
+  permisionid Int
+  permisions  permisions @relation(fields: [permisionid], references: [permisionid], onDelete: NoAction, onUpdate: NoAction, map: "permisions_roles_permisions_fk")
+  roles       roles      @relation(fields: [rolid], references: [rolid], onDelete: NoAction, onUpdate: NoAction, map: "roles_roles_permisions_fk")
+
+  @@id([rolid, permisionid], map: "roles_permisions_pk")
+}
+
+model user_roles {
+  rolid  Int
+  userid Int
+  roles  roles @relation(fields: [rolid], references: [rolid], onDelete: NoAction, onUpdate: NoAction, map: "roles_user_roles_fk")
+  users  users @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction, map: "users_user_roles_fk")
+
+  @@id([rolid, userid], map: "user_roles_pk")
+}
+
+model users {
+  userid         Int              @id(map: "users_pk")
+  name           String           @db.VarChar
+  created_by     String           @db.VarChar
+  created_at     DateTime         @default(now()) @db.Timestamp(6)
+  modified_at    DateTime?        @db.Timestamp(6)
+  modified_by    String?          @db.VarChar
+  lastname       String           @db.VarChar
+  password_trace password_trace[]
+  user_roles     user_roles[]
+}
