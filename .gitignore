@@ -34,4 +34,8 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 /prisma/generated
+
 .env
+.env.example
+.env.local
+.env.staging
