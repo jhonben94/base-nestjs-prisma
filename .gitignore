@@ -41,3 +41,6 @@ lerna-debug.log*
 .env.staging
 package-lock.json
 package-lock.json
+/src/schema.gql
+src/schema.gql
+src/schema.gql

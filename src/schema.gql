@@ -31,6 +31,7 @@ type Query {
 type Mutation {
   delete(id: Float!): domains
   createDraft(data: domainsCreateInput!): domains!
+  login(username: String!, password: String!): String!
 }
 
 input domainsCreateInput {
